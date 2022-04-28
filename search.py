@@ -27,8 +27,9 @@ for link in links:
             result.write(title[0].getText() + "\n")  # write title
             result.write(link.get('href').split("?q=")[1].split("&sa=U")[0] + "\n\n")  # write link
 
-if os.stat("results.txt").st_size == 0:
-    result.write("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+result.close()
 
+if os.path.getsize("results.txt") == 0:
+    print("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
 print("Done!")

@@ -10,16 +10,15 @@ https://ru.wikipedia.org/wiki/PyPI
 Installing Packages
 https://packaging.python.org/installing/
 
-Using TestPyPI - Python Packaging User Guide
-https://packaging.python.org/guides/using-testpypi/
-
 Python Package Index (@pypi) / Twitter
 https://twitter.com/pypi
 
 Практический разбор PyPI для Python-инженеров | DOU
 https://dou.ua/forums/topic/34885/
 
-PyPI Repositories - Sonatype Help
-https://help.sonatype.com/display/NXRM3/PyPI%2BRepositories
+Разработка идеального pypi пакета с поддержкой разных версий ...
+https://habr.com/ru/post/483512/
 
-https://www.youtube.com/watch?v=dQw4w9WgXcQ
+Своё частичное зеркало PyPi, на всякий случай
+https://habr.com/ru/post/657663/
+
