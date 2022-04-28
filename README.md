@@ -4,4 +4,13 @@ Console program which takes user's query, searches for links and returns results
 
 Install dependencies:
 
-```pip install beautifulsoup4```
+```
+    pip install beautifulsoup4
+    pip install click
+```
+
+To use program:
+
+```
+    python3 search.py -s "your query" -b "browser name"
+```

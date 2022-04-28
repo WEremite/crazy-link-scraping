@@ -1,24 +1,30 @@
-PyPI · The Python Package Index
-https://pypi.org/
+Шевченко Тарас Григорович - Вікіпедія
+https://uk.wikipedia.org/wiki/%25D0%25A8%25D0%25B5%25D0%25B2%25D1%2587%25D0%25B5%25D0%25BD%25D0%25BA%25D0%25BE_%25D0%25A2%25D0%25B0%25D1%2580%25D0%25B0%25D1%2581_%25D0%2593%25D1%2580%25D0%25B8%25D0%25B3%25D0%25BE%25D1%2580%25D0%25BE%25D0%25B2%25D0%25B8%25D1%2587
 
-PyPI - Вікіпедія
-https://uk.wikipedia.org/wiki/PyPI
+Шевченко, Тарас Григорьевич - Википедия
+https://ru.wikipedia.org/wiki/%25D0%25A8%25D0%25B5%25D0%25B2%25D1%2587%25D0%25B5%25D0%25BD%25D0%25BA%25D0%25BE,_%25D0%25A2%25D0%25B0%25D1%2580%25D0%25B0%25D1%2581_%25D0%2593%25D1%2580%25D0%25B8%25D0%25B3%25D0%25BE%25D1%2580%25D1%258C%25D0%25B5%25D0%25B2%25D0%25B8%25D1%2587
 
-PyPI - Википедия
-https://ru.wikipedia.org/wiki/PyPI
+Тарас Григорович Шевченко
+http://www.univ.kiev.ua/ua/geninf/Shevchenko
 
-Installing Packages
-https://packaging.python.org/installing/
+ШЕВЧЕНКО Тарас Григорович (1814-1861) - ГАЛЕРЕЯ ...
+http://www.univ.kiev.ua/ua/geninf/osobystosti/shevchenko/
 
-Python Package Index (@pypi) / Twitter
-https://twitter.com/pypi
+Тарас Григорович Шевченко (25 лютого (9 березня) 1814
+http://www.nbuv.gov.ua/node/1879
 
-Практический разбор PyPI для Python-инженеров | DOU
-https://dou.ua/forums/topic/34885/
+Найкращі вірші Тараса Шевченка, які має знати кожен українець
+https://maximum.fm/najkrashchi-virshi-tarasa-grigorovicha-shevchenka_n137337
 
-Разработка идеального pypi пакета с поддержкой разных версий ...
-https://habr.com/ru/post/483512/
+Шевченко Тарас Григорович - Біографія - УКРЛІТ.ORG
+http://ukrlit.org/shevchenko_taras_hryhorovych
 
-Своё частичное зеркало PyPi, на всякий случай
-https://habr.com/ru/post/657663/
+Шевченко Тарас Григорьевич — биография художника, личная ...
+https://www.culture.ru/persons/10228/taras-shevchenko
+
+ШЕВЧЕНКО ТАРАС ГРИГОРОВИЧ - Інститут історії України
+http://history.org.ua/%3Ftermin%3DShevchenko_Taras
+
+Биография Тараса Шевченко - РИА Новости, 09.03.2014
+https://ria.ru/20140309/998629880.html
 
