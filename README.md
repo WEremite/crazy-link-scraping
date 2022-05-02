@@ -7,10 +7,11 @@ Install dependencies:
 ```
     pip install beautifulsoup4
     pip install click
+    pip install pandas
 ```
 
 To use program:
 
 ```
-    python3 search.py -s "your query" -b "browser name"
+    python3 search.py -s "your query" -b "browser name" -o "output file name"
 ```
