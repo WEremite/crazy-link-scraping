@@ -2,12 +2,10 @@
 
 Console program which takes user's query, searches for links and returns results of ten links with titles.
 
-Install dependencies:
+To install dependencies use command:
 
 ```
-    pip install beautifulsoup4
-    pip install click
-    pip install pandas
+pip install -r requirements.txt
 ```
 
 To use program:
