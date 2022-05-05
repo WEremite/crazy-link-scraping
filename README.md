@@ -25,3 +25,6 @@ pip install -r requirements.txt
 ```
 python3 search.py -s "your query" -b "browser name" -o "output file name"
 ```
+```-s``` - user's searching query. This parameter is mandatory! <br />
+```-b``` - browser name. Default value is "chrome". This parameter is optional. <br />
+```-o``` - path to <b>.csv</b> file for saving search result. For example: "/dir/dir2/result.csv" If file doesn't exit result will be shown in terminal. This parameter is optional. <br />
