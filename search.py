@@ -6,7 +6,9 @@ from bs4.element import Tag
 from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.edge.service import Service
 
 
 @click.command()
@@ -15,14 +17,8 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 @click.option('-o', '--output', "output", default='not', help="File to save the results")
 def main(user_query, browser, output):
     print(f"Searching for {user_query} in {browser}...")
-    if browser.capitalize() == 'Firefox':
-        firefox_capabilities = DesiredCapabilities.FIREFOX
-        firefox_capabilities['marionette'] = False
-        driver = webdriver.Firefox(executable_path="./drivers/geckodriver")
-    elif browser.capitalize() == 'Edge':
-        driver = webdriver.Edge(executable_path="./drivers/msedgedriver")
-    else:
-        driver = webdriver.Chrome(executable_path="./drivers/chromedriver")
+
+    driver = Browser(browser).get_driver()
 
     driver.get("https://www.google.com")
 
@@ -68,6 +64,28 @@ def to_file(links, titles, my_file):
     df.to_csv(my_file, index=False)
 
     print(pandas.read_csv(my_file))
+
+
+class Browser:
+    def __init__(self, browser):
+        self.driver = None
+        self.browser = browser.capitalize()
+        
+        self.set_driver()
+
+    def set_driver(self):
+        if self.browser == "Firefox":
+            s = Service("./drivers/geckodriver")
+            self.driver = webdriver.Firefox(service=s)
+        elif self.browser == "Edge":
+            s = Service("./drivers/msedgedriver")
+            self.driver = webdriver.Edge(service=s)
+        else:
+            s = Service("./drivers/chromedriver")
+            self.driver = webdriver.Chrome(service=s)
+
+    def get_driver(self):
+        return self.driver
 
 
 main()
