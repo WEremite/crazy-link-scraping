@@ -1,67 +1,119 @@
-import requests
 import click
-import webbrowser
 import pandas
-import os
+import time
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 from pathlib import Path
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.edge.service import Service
 
 
 @click.command()
 @click.option('-s', '--search', "user_query", default='World', help="User's search query")
-@click.option('-b', '--browser', "browser", default='chrome', help="Browser to use")
+@click.option('-b', '--browser', "browser", default='Chrome', help="Browser to use")
 @click.option('-o', '--output', "output", default='not', help="File to save the results")
 def main(user_query, browser, output):
     print(f"Searching for {user_query} in {browser}...")
 
-    replace_whitespace = user_query.replace(' ', '+')
-    number_of_search_results = 10
-    url = f"https://www.google.com/search?q={replace_whitespace}&num={number_of_search_results}"
-    webbrowser.get(browser).open(url)
-    requests_result = requests.get(url)
-    soup_link = BeautifulSoup(requests_result.content, "html.parser")
-    links = soup_link.find_all("a")
-
-    my_file = Path(output)
-
-    if my_file.exists():
-        to_file(links, my_file)
-    else:
-        to_console(links)
+    Output(user_query, output)
 
 
-def to_file(links, my_file):
-    result = open(my_file, "w")
-    result.write("Title,URL\n")
+class Output:
+    def __init__(self, user_query, output):
+        self.output_file = Path(output)
+        self.result = Results(user_query, output).get_results()
+        self.links = self.result[0]
+        self.titles = self.result[1]
 
-    add_results(links, result)
+        if self.output_file.exists():
+            self.to_file()
+        else:
+            self.to_console()
 
-    print("Done!")
+    def to_file(self):
+        df = pandas.DataFrame({"Title": self.titles[:10], "Link": self.links[:10]})
+        df.to_csv(self.output_file, index=False)
 
+        print(pandas.read_csv(self.output_file))
 
-def to_console(links):
-    result = open('result.csv', "w")
-    result.write("Title,URL\n")
-
-    add_results(links, result)
-
-    answer = pandas.read_csv('result.csv')
-    print(answer)
-
-    os.remove('result.csv')
-
-    print("Done!")
-
-
-def add_results(links, result):
-    for link in links:
-        link_href = link.get('href')
-        if "url?q=" in link_href and "webcache" not in link_href:
-            title = link.find_all('h3')
-            if len(title) > 0:
-                result.write(title[0].getText().replace(",", "") + ",")  # write title
-                result.write(link.get('href').split("?q=")[1].split("&sa=U")[0] + "\n")  # write link
-    result.close()
+    def to_console(self):
+        for (link, title) in zip(self.links[:10], self.titles):
+            print(f"{title} \n - {link} \n ------------------------------")
 
 
-main()
+class Results:
+    def __init__(self, user_query, output):
+        self.result_div = Search(user_query, output).get_div()
+        self.links = []
+        self.titles = []
+
+        self.save_results()
+
+    def save_results(self):
+        for result in self.result_div:
+            link = result.find('a', href=True)
+            title = result.find('h3')
+
+            if isinstance(title, Tag):
+                title = title.get_text()
+
+            if link != '' and link['href'][0] != "/" and title != '':
+                self.links.append(link['href'])
+                self.titles.append(title)
+
+    def get_results(self):
+        return self.links, self.titles
+
+
+class Search:
+    def __init__(self, user_query, browser):
+        self.user_query = user_query
+        self.driver = Browser(browser).get_driver()
+        self.result_div = None
+
+        self.searching()
+
+    def searching(self):
+        self.driver.get("https://www.google.com")
+
+        search_bar = self.driver.find_element(by="name", value="q")
+        search_bar.clear()
+        search_bar.send_keys(self.user_query)
+        search_bar.send_keys(Keys.RETURN)
+
+        time.sleep(3)
+
+        soup = BeautifulSoup(self.driver.page_source, "html.parser")
+        self.result_div = soup.find_all('div', attrs={'class': 'g'})
+
+    def get_div(self):
+        return self.result_div
+
+
+class Browser:
+    def __init__(self, browser):
+        self.driver = None
+        self.browser = browser.capitalize()
+
+        self.set_driver()
+
+    def set_driver(self):
+        if self.browser == "Firefox":
+            s = Service("./drivers/geckodriver")
+            self.driver = webdriver.Firefox(service=s)
+        elif self.browser == "Edge":
+            s = Service("./drivers/msedgedriver")
+            self.driver = webdriver.Edge(service=s)
+        else:
+            s = Service("./drivers/chromedriver")
+            self.driver = webdriver.Chrome(service=s)
+
+    def get_driver(self):
+        return self.driver
+
+
+if __name__ == "__main__":
+    main()
