@@ -35,4 +35,4 @@ python3 search.py -s "your query" -b "browser name" -o "output file name"
 Default value is "Chrome". This parameter is <i>optional.</i> <br />
 
 ```-o``` - path to <b>.csv</b> file for saving search result. For example: ```"/dir/dir2/result.csv"```
-If file doesn't exit result will be shown in terminal. This parameter is <i>optional.</i> <br />
+If file doesn't exit result will be saved in database and shown in terminal. This parameter is <i>optional.</i> <br />

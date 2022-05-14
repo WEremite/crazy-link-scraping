@@ -9,6 +9,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.edge.service import Service
+import mysql.connector
+from mysql.connector import Error
+import credential
 
 
 @click.command()
@@ -16,22 +19,137 @@ from selenium.webdriver.edge.service import Service
 @click.option('-b', '--browser', "browser", default='Chrome', help="Browser to use")
 @click.option('-o', '--output', "output", default='not', help="File to save the results")
 def main(user_query, browser, output):
+    Database().create_database()
+
+    Query(QueryCommand().clear_table()).execute_query()
+
     print(f"Searching for {user_query} in {browser}...")
 
     Output(user_query, output)
 
 
-class Output:
+class Connection:
+    host_name = 'localhost'
+    user_name = 'root'
+    user_password = credential.password
+
+    def create_server_connection(self):
+        connection = None
+        try:
+            connection = mysql.connector.connect(
+                host=self.host_name,
+                user=self.user_name,
+                passwd=self.user_password
+            )
+            print("MySQL Database connection successful")
+        except Error as err:
+            print(f"Error: '{err}'")
+
+        return connection
+
+
+class Database(Connection):
+    def __init__(self):
+        super().__init__()
+        self.host_name = Connection.host_name
+        self.user_name = Connection.user_name
+        self.user_password = Connection.user_password
+        self.query = "CREATE DATABASE search_result_db"
+        self.db_name = 'search_result_db'
+        self.connection = Connection().create_server_connection()
+
+    def create_database(self):
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(self.query)
+            print("Database created successfully")
+        except Error as err:
+            print(f"Error: '{err}'")
+
+    def create_database_connection(self):
+        connection = None
+        try:
+            connection = mysql.connector.connect(
+                host=self.host_name,
+                user=self.user_name,
+                passwd=self.user_password,
+                database=self.db_name
+            )
+            print("MySQL Database connection successful")
+        except Error as err:
+            print(f"Error: '{err}'")
+
+        return connection
+
+
+class Query:
+    def __init__(self, query):
+        self.query = query
+        self.connection = Database().create_database_connection()
+
+    def execute_query(self):
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(self.query)
+            self.connection.commit()
+            print("Query successful")
+        except Error as err:
+            print(f"Error: '{err}'")
+
+    def read_query(self):
+        cursor = self.connection.cursor()
+        result = None
+        try:
+            cursor.execute(self.query)
+            result = cursor.fetchall()
+            return result
+        except Error as err:
+            print(f"Error: '{err}'")
+
+
+class QueryCommand:
+    def create_table(self):
+        create_result_table = """
+        CREATE TABLE result (
+            `id` INT NOT NULL AUTO_INCREMENT,
+            `title` VARCHAR(255) NOT NULL,
+            `link` VARCHAR(255) NOT NULL,
+            PRIMARY KEY (id)
+        );
+        """
+        return create_result_table
+
+    def insert_query(self, title, link):
+        insert_result = f"""
+         INSERT INTO result (title, link)
+            VALUES ("{title}", "{link}");
+         """
+        return insert_result
+
+    def select_query(self):
+        select_result = "SELECT * FROM result"
+        return select_result
+
+    def clear_table(self):
+        clear_table = "TRUNCATE TABLE result"
+        return clear_table
+
+
+class Output(Connection):
     def __init__(self, user_query, output):
+        super().__init__()
         self.output_file = Path(output)
         self.result = Results(user_query, output).get_results()
         self.links = self.result[0]
         self.titles = self.result[1]
+        self.host_name = Connection.host_name
+        self.user_name = Connection.user_name
+        self.user_password = Connection.user_password
 
         if self.output_file.exists():
             self.to_file()
         else:
-            self.to_console()
+            self.to_db()
 
     def to_file(self):
         df = pandas.DataFrame({"Title": self.titles[:10], "Link": self.links[:10]})
@@ -39,9 +157,21 @@ class Output:
 
         print(pandas.read_csv(self.output_file))
 
-    def to_console(self):
+    def to_db(self):
+        Query(QueryCommand().clear_table()).execute_query()
         for (link, title) in zip(self.links[:10], self.titles):
-            print(f"{title} \n - {link} \n ------------------------------")
+            Query(QueryCommand().insert_query(title, link)).execute_query()
+
+        results = Query(QueryCommand().select_query()).read_query()
+        from_db = []
+
+        for result in results:
+            result = list(result)
+            from_db.append(result)
+
+        columns = ['id', 'title', 'link']
+        df = pandas.DataFrame(from_db, columns=columns)
+        print(df)
 
 
 class Results:
