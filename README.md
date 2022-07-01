@@ -20,7 +20,12 @@ source <name_your_environment>/bin/activate
 ```
 pip install -r requirements.txt
 ```
-5. To use program:
+
+5. To use webdriver for your browser and OS download it from here: [Selenium browser drivers](https://www.selenium.dev/documentation/webdriver/getting_started/install_drivers/)
+and then put it to ```drivers``` folder
+<br />
+<br />
+6. To use program:
 
 ```
 python3 search.py -s "your query" -b "browser name" -o "output file name"

@@ -25,7 +25,7 @@ def main(user_query, browser, output):
 
     print(f"Searching for {user_query} in {browser}...")
 
-    Output(user_query, output)
+    Output(user_query, output, browser)
 
 
 class Connection:
@@ -136,10 +136,10 @@ class QueryCommand:
 
 
 class Output(Connection):
-    def __init__(self, user_query, output):
+    def __init__(self, user_query, output, browser):
         super().__init__()
         self.output_file = Path(output)
-        self.result = Results(user_query, output).get_results()
+        self.result = Results(user_query, browser).get_results()
         self.links = self.result[0]
         self.titles = self.result[1]
         self.host_name = Connection.host_name
@@ -175,8 +175,8 @@ class Output(Connection):
 
 
 class Results:
-    def __init__(self, user_query, output):
-        self.result_div = Search(user_query, output).get_div()
+    def __init__(self, user_query, browser):
+        self.result_div = Search(user_query, browser).get_div()
         self.links = []
         self.titles = []
 
@@ -200,6 +200,7 @@ class Results:
 
 class Search:
     def __init__(self, user_query, browser):
+        print(browser)
         self.user_query = user_query
         self.driver = Browser(browser).get_driver()
         self.result_div = None
@@ -226,6 +227,7 @@ class Search:
 class Browser:
     def __init__(self, browser):
         self.driver = None
+        print(browser)
         self.browser = browser.capitalize()
 
         self.set_driver()
@@ -242,6 +244,7 @@ class Browser:
             self.driver = webdriver.Chrome(service=s)
 
     def get_driver(self):
+
         return self.driver
 
 
